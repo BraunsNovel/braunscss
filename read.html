@@ -8,6 +8,18 @@
   <link rel="stylesheet" href="css/style.css">
   
   <style>
+    /* 1. Ekranın En Üstündeki Okuma İlerleme Çubuğu */
+    #progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 4px;
+      background: var(--accent-color);
+      width: 0%;
+      z-index: 3000;
+      transition: width 0.1s ease-out;
+    }
+
     .reader-section { padding: 40px 0; }
     .novel-title { font-size: 0.9rem; color: var(--accent-color); margin-bottom: 0.5rem; text-align: center; }
     .chapter-title { font-size: 2.2rem; text-align: center; margin-bottom: 1.5rem; }
@@ -19,7 +31,7 @@
       margin-bottom: 2.5rem;
       font-size: 0.9rem;
       border-radius: 0 8px 8px 0;
-      display: none; /* JS veri varsa görünür yapacak */
+      display: none;
     }
 
     #novelContent { font-size: var(--font-size-base); line-height: var(--line-height-base); }
@@ -32,21 +44,132 @@
       padding-top: 2rem;
       border-top: 1px solid var(--border-color);
     }
+
+    /* 2. Bölüm Seçme Çekmecesi (Drawer) & Overlay */
+    .drawer-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 2000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(2px);
+    }
+
+    .drawer-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .chapter-drawer {
+      position: fixed;
+      top: 0;
+      left: -320px;
+      width: 300px;
+      height: 100%;
+      background: var(--card-bg);
+      border-right: 1px solid var(--border-color);
+      z-index: 2100;
+      transition: left 0.3s ease;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 5px 0 25px rgba(0,0,0,0.2);
+    }
+
+    .chapter-drawer.active {
+      left: 0;
+    }
+
+    .drawer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .drawer-chapters-list {
+      overflow-y: auto;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .drawer-chapter-item {
+      padding: 10px 12px;
+      border-radius: 6px;
+      background: var(--bg-color);
+      border: 1px solid var(--border-color);
+      color: var(--text-color);
+      font-size: 0.88rem;
+      transition: background 0.2s;
+    }
+
+    .drawer-chapter-item:hover {
+      border-color: var(--accent-color);
+    }
+
+    /* Font Seçici Dropdown / Select */
+    .font-select {
+      background: var(--card-bg);
+      color: var(--text-color);
+      border: 1px solid var(--border-color);
+      padding: 6px 8px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      outline: none;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
 
+  <!-- Okuma İlerleme Çubuğu -->
+  <div id="progress-bar"></div>
+
   <!-- Header -->
   <header>
     <div class="container header-content">
-      <a href="index.html" class="logo">Braun Novel</a>
-      <div class="reader-controls">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <!-- Çekmece Açma Butonu -->
+        <button id="openDrawerBtn" class="btn" title="İçindekiler / Bölümler">☰ Bölümler</button>
+        <a href="index.html" class="logo" style="font-size:1.1rem;">Braun Novel</a>
+      </div>
+
+      <!-- Okuma Kontrolleri -->
+      <div class="reader-controls" style="display: flex; gap: 6px; align-items: center;">
+        <!-- Font Ailesi Seçici -->
+        <select id="fontFamilySelect" class="font-select">
+          <option value="'Georgia', serif">Serif (Klasik)</option>
+          <option value="'Helvetica Neue', sans-serif">Sans (Modern)</option>
+          <option value="'Courier New', monospace">Mono (Düz)</option>
+        </select>
+
         <button id="fontDecrease" class="btn">A-</button>
         <button id="fontIncrease" class="btn">A+</button>
-        <button id="themeToggle" class="btn">🌙 Mode</button>
+        <button id="themeToggle" class="btn">🌙</button>
       </div>
     </div>
   </header>
+
+  <!-- Bölüm Seçme Çekmecesi Paneli -->
+  <div class="drawer-overlay" id="drawerOverlay"></div>
+  <aside class="chapter-drawer" id="chapterDrawer">
+    <div class="drawer-header">
+      <h3 style="margin:0; font-size:1.1rem;">İçindekiler</h3>
+      <button id="closeDrawerBtn" class="btn" style="padding:4px 8px;">✕</button>
+    </div>
+    <div class="drawer-chapters-list" id="drawerChaptersContainer">
+      <p style="text-align:center; opacity:0.6; padding:20px 0;">Bölümler yükleniyor...</p>
+    </div>
+  </aside>
 
   <!-- Okuma Alanı -->
   <main class="container reader-section">
@@ -69,10 +192,101 @@
     </nav>
   </main>
 
-  <!-- Kütüphaneler ve Scriptler -->
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script> <!-- Markdown Parser -->
+  <!-- Scriptler -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src="js/reader.js"></script>
   <script src="js/library.js"></script>
   <script src="js/content-loader.js"></script>
+
+  <!-- Ekstra İnteraktif Kodlar -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // --- 1. Okuma İlerleme Çubuğu Mantığı ---
+      window.addEventListener("scroll", () => {
+        const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = (winScroll / height) * 100;
+        const progressBar = document.getElementById("progress-bar");
+        if (progressBar) {
+          progressBar.style.width = scrolled + "%";
+        }
+      });
+
+      // --- 2. Font Ailesi Değiştirici Mantığı ---
+      const fontFamilySelect = document.getElementById("fontFamilySelect");
+      const savedFont = localStorage.getItem("bn_font_family");
+
+      if (savedFont) {
+        document.documentElement.style.setProperty("--font-main", savedFont);
+        if (fontFamilySelect) fontFamilySelect.value = savedFont;
+      }
+
+      if (fontFamilySelect) {
+        fontFamilySelect.addEventListener("change", (e) => {
+          const selectedFont = e.target.value;
+          document.documentElement.style.setProperty("--font-main", selectedFont);
+          localStorage.setItem("bn_font_family", selectedFont);
+        });
+      }
+
+      // --- 3. Bölüm Seçme Çekmecesi (Drawer) Mantığı ---
+      const openDrawerBtn = document.getElementById("openDrawerBtn");
+      const closeDrawerBtn = document.getElementById("closeDrawerBtn");
+      const drawerOverlay = document.getElementById("drawerOverlay");
+      const chapterDrawer = document.getElementById("chapterDrawer");
+      const drawerContainer = document.getElementById("drawerChaptersContainer");
+
+      function toggleDrawer(open) {
+        if (open) {
+          chapterDrawer.classList.add("active");
+          drawerOverlay.classList.add("active");
+          loadDrawerChapters();
+        } else {
+          chapterDrawer.classList.remove("active");
+          drawerOverlay.classList.remove("active");
+        }
+      }
+
+      if (openDrawerBtn) openDrawerBtn.addEventListener("click", () => toggleDrawer(true));
+      if (closeDrawerBtn) closeDrawerBtn.addEventListener("click", () => toggleDrawer(false));
+      if (drawerOverlay) drawerOverlay.addEventListener("click", () => toggleDrawer(false));
+
+      // Çekmece İçi Bölümleri Otomatik Yükleme
+      async function loadDrawerChapters() {
+        if (!drawerContainer) return;
+        
+        let chapters = [];
+        let chNum = 1;
+        let failures = 0;
+
+        while (failures < 2) {
+          try {
+            const res = await fetch(`content/chapters/bolum-${chNum}.md`);
+            if (res.ok) {
+              chapters.push(chNum);
+              failures = 0;
+            } else {
+              failures++;
+            }
+          } catch(e) {
+            failures++;
+          }
+          chNum++;
+          if (chNum > 200) break;
+        }
+
+        if (chapters.length === 0) {
+          drawerContainer.innerHTML = '<p style="text-align:center; opacity:0.6;">Bölüm bulunamadı.</p>';
+          return;
+        }
+
+        drawerContainer.innerHTML = chapters.map(num => `
+          <a href="read.html?ch=${num}" class="drawer-chapter-item">
+            Bölüm ${num}
+          </a>
+        `).join('');
+      }
+    });
+  </script>
 </body>
 </html>
