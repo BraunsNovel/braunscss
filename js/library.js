@@ -1,47 +1,66 @@
 // brauns-novel-cms/js/library.js
 
-// --- 1. Favorilere Ekle / Çıkar ---
-function toggleFavorite(novelId, novelData) {
-  let favorites = JSON.parse(localStorage.getItem("user_favorites")) || {};
-  
+// 1. Favorilere Ekle / Çıkar
+function toggleFavorite(novelId, title, cover) {
+  let favorites = JSON.parse(localStorage.getItem("bn_favorites")) || {};
+
   if (favorites[novelId]) {
     delete favorites[novelId];
+    showToast("Favorilerden çıkarıldı.");
   } else {
     favorites[novelId] = {
-      title: novelData.title,
-      cover: novelData.cover,
+      title: title,
+      cover: cover,
       addedAt: new Date().toLocaleDateString("tr-TR")
     };
+    showToast("Favorilere eklendi! ♥");
   }
-  
-  localStorage.setItem("user_favorites", JSON.stringify(favorites));
-  updateFavoriteButtonState(novelId);
+
+  localStorage.setItem("bn_favorites", JSON.stringify(favorites));
+  updateFavButton(novelId);
 }
 
-// --- 2. Son Okunan Bölümü Kaydet (Kaldığım Yer) ---
-function saveReadingProgress(novelId, chapterId, chapterTitle) {
-  let progress = JSON.parse(localStorage.getItem("user_progress")) || {};
-  
+// 2. Okuma Geçmişini (Kaldığım Yeri) Kaydet
+function saveProgress(novelId, chapterNum, chapterTitle, chapterUrl) {
+  let progress = JSON.parse(localStorage.getItem("bn_progress")) || {};
+
   progress[novelId] = {
-    chapterId: chapterId,
+    chapterNum: chapterNum,
     chapterTitle: chapterTitle,
-    updatedAt: new Date().toLocaleDateString("tr-TR")
+    chapterUrl: chapterUrl,
+    lastReadAt: new Date().toLocaleDateString("tr-TR")
   };
-  
-  localStorage.setItem("user_progress", JSON.stringify(progress));
+
+  localStorage.setItem("bn_progress", JSON.stringify(progress));
 }
 
-// --- 3. Favori Butonunun Durumunu Güncelle ---
-function updateFavoriteButtonState(novelId) {
-  const btn = document.getElementById("favBtn");
-  if (!btn) return;
-  
-  let favorites = JSON.parse(localStorage.getItem("user_favorites")) || {};
+// 3. Favori Butonunun Görünümünü Güncelle
+function updateFavButton(novelId) {
+  const favBtn = document.getElementById("favBtn");
+  if (!favBtn) return;
+
+  let favorites = JSON.parse(localStorage.getItem("bn_favorites")) || {};
   if (favorites[novelId]) {
-    btn.innerHTML = "♥ Favorilerde";
-    btn.classList.add("active");
+    favBtn.innerHTML = "♥ Favorilerimde";
+    favBtn.style.background = "var(--accent-color)";
+    favBtn.style.color = "#ffffff";
   } else {
-    btn.innerHTML = "♡ Favorilere Ekle";
-    btn.classList.remove("active");
+    favBtn.innerHTML = "♡ Favorilere Ekle";
+    favBtn.style.background = "var(--card-bg)";
+    favBtn.style.color = "var(--text-color)";
   }
+}
+
+// 4. Küçük Bilgilendirme Balonu (Toast Notification)
+function showToast(message) {
+  let toast = document.createElement("div");
+  toast.className = "bn-toast";
+  toast.innerText = message;
+  document.body.appendChild(toast);
+
+  setTimeout(() => toast.classList.add("show"), 100);
+  setTimeout(() => {
+    toast.classList.remove("show");
+    setTimeout(() => toast.remove(), 300);
+  }, 2500);
 }
