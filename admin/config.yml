@@ -1,0 +1,48 @@
+# brauns-novel-cms/admin/config.yml
+
+# Backend Yapılandırması (GitHub Entegrasyonu)
+backend:
+  name: git-gateway
+  branch: main # Ana dalınız (master ise master yapabilirsiniz)
+
+# Görsellerin ve Medyaların Kaydedileceği Klasör
+media_folder: "assets/images"
+public_folder: "/assets/images"
+
+# Panel Dili
+locale: 'tr'
+
+# İçerik Koleksiyonları
+collections:
+
+  # 1. BÖLÜMLER KOLEKSİYONU
+  - name: "chapters"
+    label: "Novel Bölümleri"
+    label_singularity: "Bölüm"
+    folder: "content/chapters" # Bölümlerin kaydedileceği klasör
+    create: true # Yeni bölüm eklemeye izin ver
+    slug: "bolum-{{chapter_number}}"
+    editor:
+      preview: true
+    fields:
+      - { label: "Bölüm Başlığı", name: "title", widget: "string", hint: "Örn: Bölüm 15: Gölgelerin Uyanışı" }
+      - { label: "Bölüm Numarası", name: "chapter_number", widget: "number", value_type: "int" }
+      - { label: "Yayın Tarihi", name: "date", widget: "datetime", format: "YYYY-MM-DD", dateFormat: "DD MMMM YYYY", timeFormat: false }
+      - { label: "Çevirmen Notu", name: "translator_note", widget: "text", required: false, hint: "Bölüm başında veya sonunda görünecek isteğe bağlı not." }
+      - { label: "Bölüm İçeriği (Roman Metni)", name: "body", widget: "markdown", hint: "Roman metnini buraya yapıştırın." }
+
+  # 2. SERİ / NOVEL BİLGİLERİ
+  - name: "novel_info"
+    label: "Seri Detayları"
+    files:
+      - label: "Genel Seri Bilgileri"
+        name: "details"
+        file: "content/novel-info.json"
+        fields:
+          - { label: "Seri Adı", name: "title", widget: "string" }
+          - { label: "Yazar", name: "author", widget: "string" }
+          - { label: "Çevirmen", name: "translator", widget: "string" }
+          - { label: "Durum", name: "status", widget: "select", options: ["Devam Ediyor", "Tamamlandı", "Ara Verildi"] }
+          - { label: "Kapak Resmi", name: "cover_image", widget: "image" }
+          - { label: "Özet / Önsöz", name: "synopsis", widget: "text" }
+          - { label: "Etiketler / Türler", name: "tags", widget: "list", default: ["Fantezi", "Maceracı", "Gizem"] }
