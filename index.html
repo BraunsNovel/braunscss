@@ -4,10 +4,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Braun Novel | Premium Web Novel Okuma Platformu</title>
+  <title>Braun Novel | Yüce Ejderha'nın Mirası</title>
   <link rel="stylesheet" href="css/style.css">
   
-  <!-- Ana Sayfaya Özel Tipografi ve Düzen Stilleri -->
   <style>
     /* Hero / Novel Kartı */
     .novel-hero {
@@ -51,9 +50,7 @@
     }
 
     @media (max-width: 768px) {
-      .badge-group {
-        justify-content: center;
-      }
+      .badge-group { justify-content: center; }
     }
 
     .badge {
@@ -69,25 +66,9 @@
     .badge-status { background: rgba(140, 109, 70, 0.15); color: var(--accent-color); }
     .badge-tag { background: var(--card-bg); border: 1px solid var(--border-color); color: var(--text-color); }
 
-    .novel-title-main {
-      font-size: 2.2rem;
-      line-height: 1.2;
-      margin-bottom: 10px;
-    }
-
-    .novel-author {
-      font-size: 0.95rem;
-      opacity: 0.8;
-      margin-bottom: 20px;
-      font-family: var(--font-heading);
-    }
-
-    .synopsis {
-      font-size: 0.95rem;
-      line-height: 1.7;
-      opacity: 0.9;
-      margin-bottom: 25px;
-    }
+    .novel-title-main { font-size: 2.2rem; line-height: 1.2; margin-bottom: 10px; }
+    .novel-author { font-size: 0.95rem; opacity: 0.8; margin-bottom: 20px; font-family: var(--font-heading); }
+    .synopsis { font-size: 0.95rem; line-height: 1.7; opacity: 0.9; margin-bottom: 25px; }
 
     /* İstatistik Çubuğu */
     .stats-grid {
@@ -100,6 +81,7 @@
       border-radius: 8px;
       margin-bottom: 25px;
       text-align: center;
+      align-items: center;
     }
 
     .stat-value {
@@ -115,6 +97,25 @@
       font-family: var(--font-heading);
     }
 
+    /* Yıldız Puanlama Alanı Stilleri */
+    .interactive-stars {
+      display: flex;
+      justify-content: center;
+      gap: 4px;
+      cursor: pointer;
+      font-size: 1.2rem;
+      color: var(--border-color);
+      margin-bottom: 2px;
+    }
+
+    .interactive-stars span {
+      transition: color 0.15s ease, transform 0.15s ease;
+    }
+
+    .interactive-stars span:hover {
+      transform: scale(1.2);
+    }
+
     /* Aksiyon Butonları */
     .action-buttons {
       display: flex;
@@ -123,9 +124,7 @@
     }
 
     @media (max-width: 768px) {
-      .action-buttons {
-        justify-content: center;
-      }
+      .action-buttons { justify-content: center; }
     }
 
     .btn-primary {
@@ -136,9 +135,7 @@
       padding: 10px 20px;
     }
 
-    .btn-primary:hover { opacity: 0.9; }
-
-    /* Bölüm Listesi Alanı */
+    /* Bölüm Listesi */
     .chapter-section {
       margin-top: 40px;
       padding-top: 30px;
@@ -167,42 +164,10 @@
       font-family: var(--font-heading);
     }
 
-    .search-input:focus {
-      border-color: var(--accent-color);
-    }
-
     .chapter-list {
       display: flex;
       flex-direction: column;
       gap: 10px;
-    }
-
-    .chapter-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 14px 18px;
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      transition: border-color 0.2s, transform 0.1s;
-    }
-
-    .chapter-item:hover {
-      border-color: var(--accent-color);
-      transform: translateX(4px);
-    }
-
-    .chapter-name {
-      font-weight: 600;
-      color: var(--text-color);
-      font-size: 0.95rem;
-    }
-
-    .chapter-date {
-      font-size: 0.8rem;
-      opacity: 0.6;
-      font-family: var(--font-heading);
     }
   </style>
 </head>
@@ -224,13 +189,10 @@
     
     <!-- Novel Tanıtım Kartı -->
     <section class="novel-hero">
-      
-      <!-- Kapak Resmi -->
       <div class="cover-wrapper">
         <img src="https://images.unsplash.com/photo-1543002588-bfa74002ed7e?auto=format&fit=crop&w=500&q=80" alt="Novel Kapağı" class="cover-img">
       </div>
 
-      <!-- Bilgiler -->
       <div class="novel-details">
         <div class="badge-group">
           <span class="badge badge-status">Devam Ediyor</span>
@@ -246,7 +208,7 @@
           Büyük kule, bin yıldır şehrin üzerinde yükseliyordu. Kimse ne zaman yapıldığını bilmese de Elian rüzgarın kulenin tepesinden fısıldadığı şarkıları duyabiliyordu. Kadim mühürler kırıldığında, Elian krallığın kaderini değiştirecek olan o yasak mirası keşfetmek zorunda kalacak.
         </p>
 
-        <!-- İstatistikler -->
+        <!-- İstatistikler ve İnteraktif Yıldız Puanlama -->
         <div class="stats-grid">
           <div>
             <div class="stat-value" id="totalChaptersCount">...</div>
@@ -257,8 +219,15 @@
             <div class="stat-label">Güncelleme</div>
           </div>
           <div>
-            <div class="stat-value">4.9 ★</div>
-            <div class="stat-label">Okur Puanı</div>
+            <!-- Yıldız Puanlama Kutusu -->
+            <div class="interactive-stars" id="starRatingBox">
+              <span data-value="1">★</span>
+              <span data-value="2">★</span>
+              <span data-value="3">★</span>
+              <span data-value="4">★</span>
+              <span data-value="5">★</span>
+            </div>
+            <div class="stat-label" id="ratingStatusText">4.9 ★ (Puan Ver)</div>
           </div>
         </div>
 
@@ -275,14 +244,21 @@
       <div class="chapter-toolbar">
         <h2>Bölüm Listesi</h2>
         <div style="display: flex; gap: 10px; width: 100%; max-width: 400px; justify-content: flex-end;">
-          <input type="text" id="chapterSearch" class="search-input" placeholder="Bölüm ara (Örn: 1 veya Başlangıç)...">
+          <input type="text" id="chapterSearch" class="search-input" placeholder="Bölüm ara...">
           <button id="sortToggle" class="btn" title="Sıralamayı Değiştir">⇅ Sırala</button>
         </div>
       </div>
 
-      <!-- Dinamik Bölüm Listesi (js/index-loader.js burayı otomatik doldurur) -->
       <div class="chapter-list" id="chapterContainer">
-        <!-- JS içerikleri yükleyecek -->
+        <!-- JS dinamik içerikleri yükler -->
+      </div>
+    </section>
+
+    <!-- Genel Seri İncelemeleri & Yorum Alanı (Giscus) -->
+    <section class="comments-section" style="margin-top: 50px; padding-top: 30px; border-top: 1px solid var(--border-color);">
+      <h2 style="margin-bottom: 20px; font-family: var(--font-heading);">💬 Seri İncelemeleri & Tartışmalar</h2>
+      <div id="giscusSeriesContainer">
+        <!-- Giscus dinamik yüklenecektir -->
       </div>
     </section>
 
@@ -292,12 +268,89 @@
   <script src="js/reader.js"></script>
   <script src="js/library.js"></script>
   <script src="js/index-loader.js"></script>
+  
   <script>
-    // Sayfa yüklendiğinde favori butonunun durumunu güncelle
     document.addEventListener("DOMContentLoaded", () => {
+      // --- 1. Favori Butonu Durumu ---
       if (typeof updateFavButton === "function") {
         updateFavButton("yuce-ejderha");
       }
+
+      // --- 2. İnteraktif Yıldız Puanlama Mantığı ---
+      const starSpans = document.querySelectorAll("#starRatingBox span");
+      const ratingStatusText = document.getElementById("ratingStatusText");
+      const novelId = "yuce-ejderha";
+      let savedRating = localStorage.getItem(`bn_user_rating_${novelId}`) || 0;
+
+      function highlightStars(rating) {
+        starSpans.forEach((span) => {
+          const val = parseInt(span.getAttribute("data-value"));
+          if (val <= rating) {
+            span.style.color = "#f39c12"; // Altın Sarısı
+          } else {
+            span.style.color = "var(--border-color)";
+          }
+        });
+      }
+
+      // Kayıtlı puan varsa göster
+      if (savedRating > 0) {
+        highlightStars(savedRating);
+        ratingStatusText.innerHTML = `Oyunuz: <strong>${savedRating}/5 ★</strong>`;
+      }
+
+      // Hover ve Click Etkileşimleri
+      starSpans.forEach((span) => {
+        span.addEventListener("mouseover", () => {
+          const hoverVal = parseInt(span.getAttribute("data-value"));
+          highlightStars(hoverVal);
+        });
+
+        span.addEventListener("mouseout", () => {
+          highlightStars(savedRating);
+        });
+
+        span.addEventListener("click", () => {
+          savedRating = parseInt(span.getAttribute("data-value"));
+          localStorage.setItem(`bn_user_rating_${novelId}`, savedRating);
+          highlightStars(savedRating);
+          ratingStatusText.innerHTML = `Oyunuz: <strong>${savedRating}/5 ★</strong> (Kaydedildi)`;
+        });
+      });
+
+      // --- 3. Genel Seri Yorum Sistemi (Giscus) ---
+      function loadSeriesGiscus() {
+        const container = document.getElementById("giscusSeriesContainer");
+        if (!container) return;
+
+        const currentTheme = localStorage.getItem("bn_theme_mode") || "light";
+        let giscusTheme = currentTheme === "dark" ? "dark" : "light";
+
+        container.innerHTML = "";
+
+        const script = document.createElement("script");
+        script.src = "https://giscus.app/client.js";
+        
+        // ⚠️ giscus.app'ten alınan bilgileri buraya girebilirsiniz
+        script.setAttribute("data-repo", "KULLANICI_ADINIZ/brauns-novel-cms");
+        script.setAttribute("data-repo-id", "BURAYA_REPO_ID_GELECEK");
+        script.setAttribute("data-category", "Announcements");
+        script.setAttribute("data-category-id", "BURAYA_CATEGORY_ID_GELECEK");
+        
+        script.setAttribute("data-mapping", "pathname");
+        script.setAttribute("data-strict", "0");
+        script.setAttribute("data-reactions-enabled", "1");
+        script.setAttribute("data-emit-metadata", "0");
+        script.setAttribute("data-input-position", "top");
+        script.setAttribute("data-theme", giscusTheme);
+        script.setAttribute("data-lang", "tr");
+        script.setAttribute("crossorigin", "anonymous");
+        script.async = true;
+
+        container.appendChild(script);
+      }
+
+      loadSeriesGiscus();
     });
   </script>
 </body>
