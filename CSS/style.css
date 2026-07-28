@@ -1,0 +1,110 @@
+/* brauns-novel-cms/css/style.css */
+
+/* --- Temel Değişkenler ve Temalar --- */
+:root {
+  /* Gündüz Teması (Soft Cream) */
+  --bg-color: #fcfbf9;         /* Gözü yormayan kağıt tonu */
+  --text-color: #2b2b2b;       /* Yumuşak siyah metin */
+  --accent-color: #8c6d46;     /* Premium kahve/taba tonu */
+  --card-bg: #ffffff;
+  --border-color: rgba(0,0,0,0.08);
+  
+  /* Tipografi Ayarları */
+  --font-main: 'Georgia', serif; /* Romanlar için klasik serif */
+  --font-heading: 'Helvetica Neue', sans-serif;
+  --font-size-base: 19px;
+  --line-height-base: 1.8;
+}
+
+/* --- Karanlık Mod (Dark Mode - Obsidian) --- */
+body.dark-mode {
+  --bg-color: #121212;        /* Saf siyah değil, hafif gri */
+  --text-color: #d1d1d1;      /* Yumuşak beyaz/gri metin */
+  --accent-color: #d4af37;    /* Premium altın vurgu */
+  --card-bg: #1e1e1e;
+  --border-color: rgba(255,255,255,0.08);
+}
+
+/* --- Genel Stiller --- */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: var(--font-main);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  overflow-x: hidden;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  color: var(--text-color);
+  margin-bottom: 1rem;
+}
+
+a {
+  text-decoration: none;
+  color: var(--accent-color);
+  transition: opacity 0.2s;
+}
+
+a:hover {
+  opacity: 0.8;
+}
+
+/* --- Layout & Konteyner --- */
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* --- Header Stilleri --- */
+header {
+  background-color: var(--card-bg);
+  border-bottom: 1px solid var(--border-color);
+  padding: 15px 0;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-family: var(--font-heading);
+  color: var(--text-color);
+}
+
+/* --- Buton Stilleri --- */
+.btn {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: var(--font-heading);
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn:hover {
+  background-color: var(--bg-color);
+  border-color: var(--accent-color);
+}
