@@ -84,6 +84,16 @@
     </nav>
   </main>
 
-  <script src="js/reader.js"></script>
-</body>
-</html>
+<!-- read.html dosyasının en altındaki script alanına ekleyin -->
+<script src="js/library.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    // Okur bu sayfayı açtığı an otomatik hafızaya kaydet
+    saveProgress(
+      "yuce-ejderha-1",             // Novel ID
+      1,                             // Bölüm No
+      "Bölüm 1: Başlangıç",          // Bölüm Başlığı
+      window.location.pathname       // Mevcut Sayfa Adresi
+    );
+  });
+</script>
