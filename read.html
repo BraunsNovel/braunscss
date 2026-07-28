@@ -4,39 +4,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bölüm Başlığı | Braun Novel</title>
+  <title>Okunuyor... | Braun Novel</title>
   <link rel="stylesheet" href="css/style.css">
-  <!-- Bu sayfaya özgü ek stiller -->
+  
   <style>
-    .reader-section {
-      padding: 40px 0;
-    }
-
-    .novel-title {
+    .reader-section { padding: 40px 0; }
+    .novel-title { font-size: 0.9rem; color: var(--accent-color); margin-bottom: 0.5rem; text-align: center; }
+    .chapter-title { font-size: 2.2rem; text-align: center; margin-bottom: 1.5rem; }
+    
+    .translator-note {
+      background: var(--card-bg);
+      border-left: 4px solid var(--accent-color);
+      padding: 12px 18px;
+      margin-bottom: 2.5rem;
       font-size: 0.9rem;
-      color: var(--accent-color);
-      margin-bottom: 0.5rem;
-      text-align: center;
+      border-radius: 0 8px 8px 0;
+      display: none; /* JS veri varsa görünür yapacak */
     }
 
-    .chapter-title {
-      font-size: 2.2rem;
-      text-align: center;
-      margin-bottom: 3rem;
-    }
+    #novelContent { font-size: var(--font-size-base); line-height: var(--line-height-base); }
+    #novelContent p { margin-bottom: 1.5em; text-indent: 1.5em; }
 
-    /* Asıl Roman Metni Konteyneri */
-    #novel-content {
-      font-size: var(--font-size-base);
-      line-height: var(--line-height-base);
-    }
-
-    #novel-content p {
-      margin-bottom: 1.5em; /* Paragraflar arası boşluk */
-      text-indent: 1.5em;    /* Paragraf başı girintisi - Premium hissiyat */
-    }
-
-    /* Bölüm Navigasyonu (Önceki/Sonraki) */
     .chapter-nav {
       display: flex;
       justify-content: space-between;
@@ -48,7 +36,7 @@
 </head>
 <body>
 
-  <!-- Üst Header & Kontroller -->
+  <!-- Header -->
   <header>
     <div class="container header-content">
       <a href="index.html" class="logo">Braun Novel</a>
@@ -63,37 +51,28 @@
   <!-- Okuma Alanı -->
   <main class="container reader-section">
     <div class="novel-title">Yüce Ejderha'nın Mirası</div>
-    <h1 class="chapter-title">Bölüm 1: Başlangıç</h1>
+    <h1 class="chapter-title" id="chapterTitle">Bölüm Yükleniyor...</h1>
     
-    <article id="novel-content">
-      <!-- Asıl İçerik Buraya Gelecek -->
-      <p>Büyük kule, bin yıldır şehrin üzerinde yükseliyordu. Kimse ne zaman yapıldığını, hatta kim tarafından yapıldığını bilmiyordu. Sadece oradaydı; sessiz, kadim ve tehlikeli.</p>
-      
-      <p>Elian, kulenin gölgesinde büyümüştü. Diğerleri kuleye korkuyla bakarken, o hayranlıkla bakardı. Rüzgarın kulenin tepesinden fısıldadığı şarkıları duyabiliyordu. Bugün, o şarkıların ne anlama geldiğini öğrenme günüydü.</p>
-      
-      <p>Cebindeki kırık aynayı çıkardı ve yansımasına baktı. Gözleri her zamankinden daha parlak görünüyordu. "Hazırım," diye fısıldadı kendi kendine. "Kapılar açıldığında, içeri giren ilk kişi ben olacağım."</p>
-      
-      <!-- Daha fazla paragraf buraya eklenebilir -->
+    <!-- Çevirmen Notu -->
+    <div class="translator-note" id="translatorNote"></div>
+
+    <!-- Dinamik Metin Alanı -->
+    <article id="novelContent">
+      <p style="text-align:center; opacity:0.6;">Yazılar getiriliyor...</p>
     </article>
 
-    <!-- Bölüm Navigasyonu -->
+    <!-- Dinamik Bölüm Geçişleri -->
     <nav class="chapter-nav">
-      <a href="#" class="btn">&laquo; Önceki Bölüm</a>
+      <a href="#" id="prevChapterBtn" class="btn">&laquo; Önceki Bölüm</a>
       <a href="index.html" class="btn">İçindekiler</a>
-      <a href="#" class="btn">Sonraki Bölüm &raquo;</a>
+      <a href="#" id="nextChapterBtn" class="btn">Sonraki Bölüm &raquo;</a>
     </nav>
   </main>
 
-<!-- read.html dosyasının en altındaki script alanına ekleyin -->
-<script src="js/library.js"></script>
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    // Okur bu sayfayı açtığı an otomatik hafızaya kaydet
-    saveProgress(
-      "yuce-ejderha-1",             // Novel ID
-      1,                             // Bölüm No
-      "Bölüm 1: Başlangıç",          // Bölüm Başlığı
-      window.location.pathname       // Mevcut Sayfa Adresi
-    );
-  });
-</script>
+  <!-- Kütüphaneler ve Scriptler -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script> <!-- Markdown Parser -->
+  <script src="js/reader.js"></script>
+  <script src="js/library.js"></script>
+  <script src="js/content-loader.js"></script>
+</body>
+</html>
