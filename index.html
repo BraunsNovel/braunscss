@@ -1,0 +1,338 @@
+<!-- brauns-novel-cms/index.html -->
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Braun Novel | Premium Web Novel Okuma Platformu</title>
+  <link rel="stylesheet" href="css/style.css">
+  
+  <!-- Ana Sayfaya Özel Tipografi ve Düzen Stilleri -->
+  <style>
+    /* Hero / Novel Kartı */
+    .novel-hero {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 30px;
+      padding: 40px 0 20px 0;
+    }
+
+    @media (max-width: 768px) {
+      .novel-hero {
+        grid-template-columns: 1fr;
+        justify-items: center;
+        text-align: center;
+      }
+    }
+
+    .cover-wrapper {
+      width: 100%;
+      max-width: 240px;
+      aspect-ratio: 2 / 3;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+    }
+
+    .cover-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Meta Bilgiler ve Rozetler */
+    .badge-group {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .badge {
+      font-size: 0.75rem;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-family: var(--font-heading);
+    }
+
+    .badge-status { background: rgba(140, 109, 70, 0.15); color: var(--accent-color); }
+    .badge-tag { background: var(--card-bg); border: 1px solid var(--border-color); color: var(--text-color); }
+
+    .novel-title-main {
+      font-size: 2.2rem;
+      line-height: 1.2;
+      margin-bottom: 10px;
+    }
+
+    .novel-author {
+      font-size: 0.95rem;
+      opacity: 0.8;
+      margin-bottom: 20px;
+      font-family: var(--font-heading);
+    }
+
+    .synopsis {
+      font-size: 0.95rem;
+      line-height: 1.7;
+      opacity: 0.9;
+      margin-bottom: 25px;
+    }
+
+    /* İstatistik Çubuğu */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      padding: 15px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      margin-bottom: 25px;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 1.1rem;
+      font-weight: 700;
+      font-family: var(--font-heading);
+      color: var(--accent-color);
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      opacity: 0.7;
+      font-family: var(--font-heading);
+    }
+
+    /* Aksiyon Butonları */
+    .action-buttons {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      background: var(--accent-color);
+      color: #ffffff !important;
+      border: none;
+      font-weight: 600;
+      padding: 10px 20px;
+    }
+
+    .btn-primary:hover { opacity: 0.9; }
+
+    /* Bölüm Listesi Alanı */
+    .chapter-section {
+      margin-top: 40px;
+      padding-top: 30px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .chapter-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .search-input {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      color: var(--text-color);
+      padding: 10px 15px;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      width: 100%;
+      max-width: 300px;
+      outline: none;
+      font-family: var(--font-heading);
+    }
+
+    .search-input:focus {
+      border-color: var(--accent-color);
+    }
+
+    .chapter-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .chapter-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 18px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      transition: border-color 0.2s, transform 0.1s;
+    }
+
+    .chapter-item:hover {
+      border-color: var(--accent-color);
+      transform: translateX(4px);
+    }
+
+    .chapter-name {
+      font-weight: 600;
+      color: var(--text-color);
+      font-size: 0.95rem;
+    }
+
+    .chapter-date {
+      font-size: 0.8rem;
+      opacity: 0.6;
+      font-family: var(--font-heading);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="container header-content">
+      <a href="index.html" class="logo">Braun Novel</a>
+      <div class="reader-controls">
+        <button id="themeToggle" class="btn">🌙 Mode</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Ana İçerik -->
+  <main class="container">
+    
+    <!-- Novel Tanıtım Kartı -->
+    <section class="novel-hero">
+      
+      <!-- Kapak Resmi (Görsel yoksa şık varsayılan alan) -->
+      <div class="cover-wrapper">
+        <img src="https://images.unsplash.com/photo-1543002588-bfa74002ed7e?auto=format&fit=crop&w=500&q=80" alt="Novel Kapağı" class="cover-img">
+      </div>
+
+      <!-- Bilgiler -->
+      <div class="novel-details">
+        <div class="badge-group">
+          <span class="badge badge-status">Devam Ediyor</span>
+          <span class="badge badge-tag">Fantezi</span>
+          <span class="badge badge-tag">Maceracı</span>
+          <span class="badge badge-tag">Gizem</span>
+        </div>
+
+        <h1 class="novel-title-main">Yüce Ejderha'nın Mirası</h1>
+        <div class="novel-author">Yazar: <strong>Ethereal Pen</strong> | Çevirmen: <strong>Braun</strong></div>
+
+        <p class="synopsis">
+          Büyük kule, bin yıldır şehrin üzerinde yükseliyordu. Kimse ne zaman yapıldığını bilmese de Elian rüzgarın kulenin tepesinden fısıldadığı şarkıları duyabiliyordu. Kadim mühürler kırıldığında, Elian krallığın kaderini değiştirecek olan o yasak mirası keşfetmek zorunda kalacak.
+        </p>
+
+        <!-- İstatistikler -->
+        <div class="stats-grid">
+          <div>
+            <div class="stat-value">120+</div>
+            <div class="stat-label">Toplam Bölüm</div>
+          </div>
+          <div>
+            <div class="stat-value">Günlük</div>
+            <div class="stat-label">Güncelleme</div>
+          </div>
+          <div>
+            <div class="stat-value">4.9 ★</div>
+            <div class="stat-label">Okur Puanı</div>
+          </div>
+        </div>
+
+        <!-- Hızlı Okuma Butonları -->
+        <div class="action-buttons">
+          <a href="read.html" class="btn btn-primary">📖 İlk Bölümü Oku</a>
+          <a href="read.html" class="btn">Son Bölüm</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Bölüm Listesi (İçindekiler) -->
+    <section class="chapter-section">
+      <div class="chapter-toolbar">
+        <h2>Bölüm Listesi</h2>
+        <div style="display: flex; gap: 10px; width: 100%; max-width: 400px; justify-content: flex-end;">
+          <input type="text" id="chapterSearch" class="search-input" placeholder="Bölüm ara (Örn: 1 or Başlangıç)...">
+          <button id="sortToggle" class="btn" title="Sıralamayı Değiştir">⇅ Sırala</button>
+        </div>
+      </div>
+
+      <!-- Dinamik Bölüm Listesi -->
+      <div class="chapter-list" id="chapterContainer">
+        
+        <a href="read.html" class="chapter-item" data-chapter="1">
+          <span class="chapter-name">Bölüm 1: Başlangıç</span>
+          <span class="chapter-date">28 Temmuz 2026</span>
+        </a>
+
+        <a href="read.html" class="chapter-item" data-chapter="2">
+          <span class="chapter-name">Bölüm 2: Kulenin Gölgesi</span>
+          <span class="chapter-date">28 Temmuz 2026</span>
+        </a>
+
+        <a href="read.html" class="chapter-item" data-chapter="3">
+          <span class="chapter-name">Bölüm 3: Fısıldayan Rüzgar</span>
+          <span class="chapter-date">28 Temmuz 2026</span>
+        </a>
+
+        <a href="read.html" class="chapter-item" data-chapter="4">
+          <span class="chapter-name">Bölüm 4: Kırık Ayna</span>
+          <span class="chapter-date">28 Temmuz 2026</span>
+        </a>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Scriptler -->
+  <script src="js/reader.js"></script>
+  <script>
+    // Ana Sayfaya Özel Filtreleme ve Arama Scripti
+    document.addEventListener("DOMContentLoaded", () => {
+      const searchInput = document.getElementById("chapterSearch");
+      const chapterContainer = document.getElementById("chapterContainer");
+      const sortToggle = document.getElementById("sortToggle");
+      let isAscending = true;
+
+      // 1. Bölüm Arama Mantığı
+      if (searchInput) {
+        searchInput.addEventListener("input", (e) => {
+          const searchTerm = e.target.value.toLowerCase();
+          const chapters = chapterContainer.querySelectorAll(".chapter-item");
+
+          chapters.forEach((chapter) => {
+            const text = chapter.textContent.toLowerCase();
+            if (text.includes(searchTerm)) {
+              chapter.style.display = "flex";
+            } else {
+              chapter.style.display = "none";
+            }
+          });
+        });
+      }
+
+      // 2. Sıralama Değiştirme (Ters Çevirme)
+      if (sortToggle) {
+        sortToggle.addEventListener("click", () => {
+          const chapters = Array.from(chapterContainer.querySelectorAll(".chapter-item"));
+          chapters.reverse();
+          chapterContainer.innerHTML = "";
+          chapters.forEach(ch => chapterContainer.appendChild(ch));
+          isAscending = !isAscending;
+        });
+      }
+    });
+  </script>
+</body>
+</html>
