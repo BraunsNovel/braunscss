@@ -8,7 +8,42 @@
   <link rel="stylesheet" href="css/style.css">
   
   <style>
-    /* 1. Ekranın En Üstündeki Okuma İlerleme Çubuğu */
+    /* --- TEMA DEĞİŞKENLERİ --- */
+    :root {
+      --bg-color: #faf9f6;
+      --card-bg: #ffffff;
+      --text-color: #2b2b2b;
+      --border-color: #e5e5e5;
+      --accent-color: #8c6d46;
+      --reader-max-width: 800px;
+      --line-height-custom: 1.8;
+    }
+
+    /* Sepia (Sıcak/Krem) Tema */
+    [data-theme="sepia"] {
+      --bg-color: #f4ecd8;
+      --card-bg: #eadecc;
+      --text-color: #3b2e2b;
+      --border-color: #d8cbba;
+      --accent-color: #8c6d46;
+    }
+
+    /* Dark (Karanlık) Tema */
+    [data-theme="dark"] {
+      --bg-color: #121212;
+      --card-bg: #1e1e1e;
+      --text-color: #e0e0e0;
+      --border-color: #333333;
+      --accent-color: #d4af37;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      transition: background-color 0.25s, color 0.25s;
+    }
+
+    /* Ekranın Üstündeki Okuma İlerleme Çubuğu */
     #progress-bar {
       position: fixed;
       top: 0;
@@ -20,10 +55,36 @@
       transition: width 0.1s ease-out;
     }
 
-    .reader-section { padding: 40px 0; }
+    /* Okuma Alanı Konteyneri */
+    .reader-section {
+      padding: 30px 15px 60px 15px;
+      max-width: var(--reader-max-width);
+      margin: 0 auto;
+      transition: max-width 0.3s ease;
+    }
+
     .novel-title { font-size: 0.9rem; color: var(--accent-color); margin-bottom: 0.5rem; text-align: center; }
-    .chapter-title { font-size: 2.2rem; text-align: center; margin-bottom: 1.5rem; }
-    
+    .chapter-title { font-size: 2.1rem; text-align: center; margin-bottom: 1rem; }
+
+    /* Tahmini Okuma Süresi ve Kelime Rozetleri */
+    .reading-meta-group {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .meta-badge {
+      font-size: 0.8rem;
+      padding: 4px 12px;
+      border-radius: 20px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      opacity: 0.85;
+      font-family: var(--font-heading);
+    }
+
     .translator-note {
       background: var(--card-bg);
       border-left: 4px solid var(--accent-color);
@@ -34,8 +95,15 @@
       display: none;
     }
 
-    #novelContent { font-size: var(--font-size-base); line-height: var(--line-height-base); }
-    #novelContent p { margin-bottom: 1.5em; text-indent: 1.5em; }
+    /* Tipografi & Paragraf Ayarları */
+    #novelContent { 
+      font-size: var(--font-size-base, 1.1rem); 
+      line-height: var(--line-height-custom); 
+    }
+    #novelContent p { 
+      margin-bottom: 1.5em; 
+      text-indent: 1.5em; 
+    }
 
     .chapter-nav {
       display: flex;
@@ -45,87 +113,100 @@
       border-top: 1px solid var(--border-color);
     }
 
-    /* 2. Bölüm Seçme Çekmecesi (Drawer) & Overlay */
+    /* Bölüm Seçme Çekmecesi (Drawer) & Overlay */
     .drawer-overlay {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      top: 0; left: 0; width: 100%; height: 100%;
       background: rgba(0,0,0,0.5);
       z-index: 2000;
-      opacity: 0;
-      visibility: hidden;
+      opacity: 0; visibility: hidden;
       transition: all 0.3s ease;
       backdrop-filter: blur(2px);
     }
-
-    .drawer-overlay.active {
-      opacity: 1;
-      visibility: visible;
-    }
+    .drawer-overlay.active { opacity: 1; visibility: visible; }
 
     .chapter-drawer {
       position: fixed;
-      top: 0;
-      left: -320px;
-      width: 300px;
-      height: 100%;
+      top: 0; left: -320px;
+      width: 300px; height: 100%;
       background: var(--card-bg);
       border-right: 1px solid var(--border-color);
       z-index: 2100;
       transition: left 0.3s ease;
       padding: 20px;
-      display: flex;
-      flex-direction: column;
+      display: flex; flex-direction: column;
       box-shadow: 5px 0 25px rgba(0,0,0,0.2);
     }
-
-    .chapter-drawer.active {
-      left: 0;
-    }
+    .chapter-drawer.active { left: 0; }
 
     .drawer-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-      padding-bottom: 10px;
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 20px; padding-bottom: 10px;
       border-bottom: 1px solid var(--border-color);
     }
 
     .drawer-chapters-list {
-      overflow-y: auto;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
+      overflow-y: auto; flex: 1;
+      display: flex; flex-direction: column; gap: 8px;
     }
 
     .drawer-chapter-item {
-      padding: 10px 12px;
-      border-radius: 6px;
+      padding: 10px 12px; border-radius: 6px;
       background: var(--bg-color);
       border: 1px solid var(--border-color);
       color: var(--text-color);
       font-size: 0.88rem;
-      transition: background 0.2s;
+      transition: border-color 0.2s;
+    }
+    .drawer-chapter-item:hover { border-color: var(--accent-color); }
+
+    /* Açılır Okuma Ayarları Menüsü */
+    .settings-dropdown {
+      position: relative;
+      display: inline-block;
     }
 
-    .drawer-chapter-item:hover {
-      border-color: var(--accent-color);
-    }
-
-    /* Font Seçici Dropdown / Select */
-    .font-select {
+    .settings-menu {
+      position: absolute;
+      right: 0;
+      top: 40px;
       background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 15px;
+      width: 260px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      display: none;
+      z-index: 1000;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .settings-menu.active { display: flex; }
+
+    .setting-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+    }
+
+    .setting-select, .theme-btn-group button {
+      background: var(--bg-color);
       color: var(--text-color);
       border: 1px solid var(--border-color);
-      padding: 6px 8px;
-      border-radius: 6px;
-      font-size: 0.85rem;
-      outline: none;
+      padding: 5px 8px;
+      border-radius: 4px;
+      font-size: 0.8rem;
       cursor: pointer;
+    }
+
+    .theme-btn-group {
+      display: flex;
+      gap: 4px;
+    }
+    .theme-btn-group button.active {
+      border-color: var(--accent-color);
+      font-weight: bold;
     }
   </style>
 </head>
@@ -138,23 +219,63 @@
   <header>
     <div class="container header-content">
       <div style="display: flex; align-items: center; gap: 10px;">
-        <!-- Çekmece Açma Butonu -->
-        <button id="openDrawerBtn" class="btn" title="İçindekiler / Bölümler">☰ Bölümler</button>
+        <button id="openDrawerBtn" class="btn" title="İçindekiler">☰ Bölümler</button>
         <a href="index.html" class="logo" style="font-size:1.1rem;">Braun Novel</a>
       </div>
 
       <!-- Okuma Kontrolleri -->
       <div class="reader-controls" style="display: flex; gap: 6px; align-items: center;">
-        <!-- Font Ailesi Seçici -->
-        <select id="fontFamilySelect" class="font-select">
-          <option value="'Georgia', serif">Serif (Klasik)</option>
-          <option value="'Helvetica Neue', sans-serif">Sans (Modern)</option>
-          <option value="'Courier New', monospace">Mono (Düz)</option>
-        </select>
-
         <button id="fontDecrease" class="btn">A-</button>
         <button id="fontIncrease" class="btn">A+</button>
-        <button id="themeToggle" class="btn">🌙</button>
+        
+        <!-- Ayarlar Paneli Açma Butonu -->
+        <div class="settings-dropdown">
+          <button id="toggleSettingsBtn" class="btn" title="Okuma Ayarları">⚙️ Ayarlar</button>
+          
+          <!-- Özelleştirme Menüsü -->
+          <div class="settings-menu" id="settingsMenu">
+            <!-- Tema Seçimi -->
+            <div class="setting-row">
+              <span>Tema:</span>
+              <div class="theme-btn-group">
+                <button onclick="setReaderTheme('light')" id="themeBtnLight">☀️</button>
+                <button onclick="setReaderTheme('sepia')" id="themeBtnSepia">📜</button>
+                <button onclick="setReaderTheme('dark')" id="themeBtnDark">🌙</button>
+              </div>
+            </div>
+
+            <!-- Font Ailesi -->
+            <div class="setting-row">
+              <span>Yazı Tipi:</span>
+              <select id="fontFamilySelect" class="setting-select">
+                <option value="'Georgia', serif">Serif (Klasik)</option>
+                <option value="'Helvetica Neue', sans-serif">Sans (Modern)</option>
+                <option value="'Courier New', monospace">Mono (Düz)</option>
+              </select>
+            </div>
+
+            <!-- Satır Aralığı -->
+            <div class="setting-row">
+              <span>Satır Aralığı:</span>
+              <select id="lineHeightSelect" class="setting-select">
+                <option value="1.5">Sıkı (1.5)</option>
+                <option value="1.8" selected>Normal (1.8)</option>
+                <option value="2.1">Geniş (2.1)</option>
+              </select>
+            </div>
+
+            <!-- Ekran Genişliği -->
+            <div class="setting-row">
+              <span>Genişlik:</span>
+              <select id="readerWidthSelect" class="setting-select">
+                <option value="650px">Dar</option>
+                <option value="800px" selected>Normal</option>
+                <option value="1000px">Geniş</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </header>
@@ -172,10 +293,16 @@
   </aside>
 
   <!-- Okuma Alanı -->
-  <main class="container reader-section">
+  <main class="reader-section" id="readerSection">
     <div class="novel-title">Yüce Ejderha'nın Mirası</div>
     <h1 class="chapter-title" id="chapterTitle">Bölüm Yükleniyor...</h1>
     
+    <!-- Tahmini Okuma Süresi ve Kelime Rozetleri -->
+    <div class="reading-meta-group">
+      <span class="meta-badge" id="readTimeBadge">⏱️ Hesaplamalar yapılıyor...</span>
+      <span class="meta-badge" id="wordCountBadge">📝 -- kelime</span>
+    </div>
+
     <!-- Çevirmen Notu -->
     <div class="translator-note" id="translatorNote"></div>
 
@@ -198,38 +325,117 @@
   <script src="js/library.js"></script>
   <script src="js/content-loader.js"></script>
 
-  <!-- Ekstra İnteraktif Kodlar -->
+  <!-- Okuma İnteraktif Kodları -->
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      // --- 1. Okuma İlerleme Çubuğu Mantığı ---
+      // --- 1. Okuma İlerleme Çubuğu ---
       window.addEventListener("scroll", () => {
         const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
         const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
         const scrolled = (winScroll / height) * 100;
         const progressBar = document.getElementById("progress-bar");
-        if (progressBar) {
-          progressBar.style.width = scrolled + "%";
-        }
+        if (progressBar) progressBar.style.width = scrolled + "%";
       });
 
-      // --- 2. Font Ailesi Değiştirici Mantığı ---
-      const fontFamilySelect = document.getElementById("fontFamilySelect");
-      const savedFont = localStorage.getItem("bn_font_family");
+      // --- 2. Ayarlar Menüsü Aç/Kapat ---
+      const toggleSettingsBtn = document.getElementById("toggleSettingsBtn");
+      const settingsMenu = document.getElementById("settingsMenu");
 
-      if (savedFont) {
-        document.documentElement.style.setProperty("--font-main", savedFont);
-        if (fontFamilySelect) fontFamilySelect.value = savedFont;
-      }
-
-      if (fontFamilySelect) {
-        fontFamilySelect.addEventListener("change", (e) => {
-          const selectedFont = e.target.value;
-          document.documentElement.style.setProperty("--font-main", selectedFont);
-          localStorage.setItem("bn_font_family", selectedFont);
+      if (toggleSettingsBtn && settingsMenu) {
+        toggleSettingsBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          settingsMenu.classList.toggle("active");
+        });
+        document.addEventListener("click", (e) => {
+          if (!settingsMenu.contains(e.target) && e.target !== toggleSettingsBtn) {
+            settingsMenu.classList.remove("active");
+          }
         });
       }
 
-      // --- 3. Bölüm Seçme Çekmecesi (Drawer) Mantığı ---
+      // --- 3. Tema Değiştirme Fonksiyonu ---
+      window.setReaderTheme = function(themeName) {
+        document.documentElement.setAttribute("data-theme", themeName);
+        localStorage.setItem("bn_theme_mode", themeName);
+        
+        // Aktif Buton Vurgusu
+        ["Light", "Sepia", "Dark"].forEach(t => {
+          const btn = document.getElementById(`themeBtn${t}`);
+          if (btn) btn.classList.remove("active");
+        });
+        const activeBtn = document.getElementById(`themeBtn${themeName.charAt(0).toUpperCase() + themeName.slice(1)}`);
+        if (activeBtn) activeBtn.classList.add("active");
+      };
+
+      // Kayıtlı Temayı Yükle
+      const savedTheme = localStorage.getItem("bn_theme_mode") || "light";
+      setReaderTheme(savedTheme);
+
+      // --- 4. Font, Satır Aralığı ve Genişlik Ayarları ---
+      const fontFamilySelect = document.getElementById("fontFamilySelect");
+      const lineHeightSelect = document.getElementById("lineHeightSelect");
+      const readerWidthSelect = document.getElementById("readerWidthSelect");
+
+      // Kayıtlı Ayarları Uygula
+      if (localStorage.getItem("bn_font_family")) {
+        const font = localStorage.getItem("bn_font_family");
+        document.documentElement.style.setProperty("--font-main", font);
+        if (fontFamilySelect) fontFamilySelect.value = font;
+      }
+
+      if (localStorage.getItem("bn_line_height")) {
+        const lh = localStorage.getItem("bn_line_height");
+        document.documentElement.style.setProperty("--line-height-custom", lh);
+        if (lineHeightSelect) lineHeightSelect.value = lh;
+      }
+
+      if (localStorage.getItem("bn_reader_width")) {
+        const rw = localStorage.getItem("bn_reader_width");
+        document.documentElement.style.setProperty("--reader-max-width", rw);
+        if (readerWidthSelect) readerWidthSelect.value = rw;
+      }
+
+      // Event Listener'lar
+      if (fontFamilySelect) {
+        fontFamilySelect.addEventListener("change", (e) => {
+          document.documentElement.style.setProperty("--font-main", e.target.value);
+          localStorage.setItem("bn_font_family", e.target.value);
+        });
+      }
+
+      if (lineHeightSelect) {
+        lineHeightSelect.addEventListener("change", (e) => {
+          document.documentElement.style.setProperty("--line-height-custom", e.target.value);
+          localStorage.setItem("bn_line_height", e.target.value);
+        });
+      }
+
+      if (readerWidthSelect) {
+        readerWidthSelect.addEventListener("change", (e) => {
+          document.documentElement.style.setProperty("--reader-max-width", e.target.value);
+          localStorage.setItem("bn_reader_width", e.target.value);
+        });
+      }
+
+      // --- 5. Kelime Sayısı ve Okuma Süresi Otomatik Hesaplama ---
+      const targetNode = document.getElementById("novelContent");
+      if (targetNode) {
+        const observer = new MutationObserver(() => {
+          const text = targetNode.innerText || "";
+          const wordCount = text.trim().split(/\s+/).filter(w => w.length > 0).length;
+          
+          if (wordCount > 10) {
+            // Ortalama okuma hızı: Dakikada 200 kelime
+            const readTimeMinutes = Math.max(1, Math.ceil(wordCount / 200));
+            
+            document.getElementById("readTimeBadge").innerText = `⏱️ ~${readTimeMinutes} dk okuma`;
+            document.getElementById("wordCountBadge").innerText = `📝 ${wordCount.toLocaleString('tr-TR')} kelime`;
+          }
+        });
+        observer.observe(targetNode, { childList: true, subtree: true });
+      }
+
+      // --- 6. Bölüm Seçme Çekmecesi (Drawer) ---
       const openDrawerBtn = document.getElementById("openDrawerBtn");
       const closeDrawerBtn = document.getElementById("closeDrawerBtn");
       const drawerOverlay = document.getElementById("drawerOverlay");
@@ -251,10 +457,8 @@
       if (closeDrawerBtn) closeDrawerBtn.addEventListener("click", () => toggleDrawer(false));
       if (drawerOverlay) drawerOverlay.addEventListener("click", () => toggleDrawer(false));
 
-      // Çekmece İçi Bölümleri Otomatik Yükleme
       async function loadDrawerChapters() {
         if (!drawerContainer) return;
-        
         let chapters = [];
         let chNum = 1;
         let failures = 0;
@@ -262,15 +466,9 @@
         while (failures < 2) {
           try {
             const res = await fetch(`content/chapters/bolum-${chNum}.md`);
-            if (res.ok) {
-              chapters.push(chNum);
-              failures = 0;
-            } else {
-              failures++;
-            }
-          } catch(e) {
-            failures++;
-          }
+            if (res.ok) { chapters.push(chNum); failures = 0; }
+            else { failures++; }
+          } catch(e) { failures++; }
           chNum++;
           if (chNum > 200) break;
         }
