@@ -1,0 +1,89 @@
+<!-- brauns-novel-cms/read.html -->
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bölüm Başlığı | Braun Novel</title>
+  <link rel="stylesheet" href="css/style.css">
+  <!-- Bu sayfaya özgü ek stiller -->
+  <style>
+    .reader-section {
+      padding: 40px 0;
+    }
+
+    .novel-title {
+      font-size: 0.9rem;
+      color: var(--accent-color);
+      margin-bottom: 0.5rem;
+      text-align: center;
+    }
+
+    .chapter-title {
+      font-size: 2.2rem;
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    /* Asıl Roman Metni Konteyneri */
+    #novel-content {
+      font-size: var(--font-size-base);
+      line-height: var(--line-height-base);
+    }
+
+    #novel-content p {
+      margin-bottom: 1.5em; /* Paragraflar arası boşluk */
+      text-indent: 1.5em;    /* Paragraf başı girintisi - Premium hissiyat */
+    }
+
+    /* Bölüm Navigasyonu (Önceki/Sonraki) */
+    .chapter-nav {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Üst Header & Kontroller -->
+  <header>
+    <div class="container header-content">
+      <a href="index.html" class="logo">Braun Novel</a>
+      <div class="reader-controls">
+        <button id="fontDecrease" class="btn">A-</button>
+        <button id="fontIncrease" class="btn">A+</button>
+        <button id="themeToggle" class="btn">🌙 Mode</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Okuma Alanı -->
+  <main class="container reader-section">
+    <div class="novel-title">Yüce Ejderha'nın Mirası</div>
+    <h1 class="chapter-title">Bölüm 1: Başlangıç</h1>
+    
+    <article id="novel-content">
+      <!-- Asıl İçerik Buraya Gelecek -->
+      <p>Büyük kule, bin yıldır şehrin üzerinde yükseliyordu. Kimse ne zaman yapıldığını, hatta kim tarafından yapıldığını bilmiyordu. Sadece oradaydı; sessiz, kadim ve tehlikeli.</p>
+      
+      <p>Elian, kulenin gölgesinde büyümüştü. Diğerleri kuleye korkuyla bakarken, o hayranlıkla bakardı. Rüzgarın kulenin tepesinden fısıldadığı şarkıları duyabiliyordu. Bugün, o şarkıların ne anlama geldiğini öğrenme günüydü.</p>
+      
+      <p>Cebindeki kırık aynayı çıkardı ve yansımasına baktı. Gözleri her zamankinden daha parlak görünüyordu. "Hazırım," diye fısıldadı kendi kendine. "Kapılar açıldığında, içeri giren ilk kişi ben olacağım."</p>
+      
+      <!-- Daha fazla paragraf buraya eklenebilir -->
+    </article>
+
+    <!-- Bölüm Navigasyonu -->
+    <nav class="chapter-nav">
+      <a href="#" class="btn">&laquo; Önceki Bölüm</a>
+      <a href="index.html" class="btn">İçindekiler</a>
+      <a href="#" class="btn">Sonraki Bölüm &raquo;</a>
+    </nav>
+  </main>
+
+  <script src="js/reader.js"></script>
+</body>
+</html>
